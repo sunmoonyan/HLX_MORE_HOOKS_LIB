@@ -35,44 +35,7 @@ if SERVER then
     end
 
 
-local area = ix.plugin.list["area"]
 
-if area then
-    
-function area:AreaThink()
-    for _, client in player.Iterator() do
-        local character = client:GetCharacter()
-
-        if (!client:Alive() or !character) then
-            continue
-        end
-
-        local overlappingBoxes = {}
-        local position = client:GetPos() + client:OBBCenter()
-
-        for id, info in pairs(ix.area.stored) do
-            if (position:WithinAABox(info.startPosition, info.endPosition)) then
-                overlappingBoxes[#overlappingBoxes + 1] = id
-            end
-        end
-
-        if (#overlappingBoxes > 0) then
-            local oldID = client:GetArea()
-            local id = overlappingBoxes[1]
-            if (oldID != id) then
-                hook.Run("OnPlayerAreaChanged", client, client.ixArea, id)
-                client.ixArea = id
-            end
-            client.ixInArea = true
-        else
-            client.ixInArea = false
-            client.ixArea = ""
-            hook.Run("OnPlayerAreaChanged", client, "", "")
-        end
-    end
-end
-
-end
 
 
 
